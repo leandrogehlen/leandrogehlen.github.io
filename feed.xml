@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Leandro Guindani Gehlen</title>
+    <description>description_of_your_web_site</description>
+    <link>https://leandrogehlen.github.io/</link>
+    <atom:link href="https://leandrogehlen.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 23 Oct 2016 15:58:14 -0200</pubDate>
+    <lastBuildDate>Sun, 23 Oct 2016 15:58:14 -0200</lastBuildDate>
+    <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Recomeço</title>
+        <description>&lt;p&gt;Então depois de algum tempo (3 anos), resolvi reiniciar as atividades do meu blog.&lt;/p&gt;
+
+&lt;p&gt;Durante este tempo, tive novas experiências na área de desenvolvimento de software, novas tecnologias, novos conceitos, novos problemas e em diversas linguagens.&lt;/p&gt;
+
+&lt;p&gt;Prometo não parar de postar minhas experiências, para que com isso, possa auxiliar os desenvolvedores que concerteza vão passar ou estão passsando por problemas similares,
+quem sabe isto ajude a resolver suas dificuldades de forma mais rápida e eficiente.&lt;/p&gt;
+
+&lt;p&gt;Nos posts, anteriores eu tinha optado por começar desenvolver aplicações &lt;code class=&quot;highlighter-rouge&quot;&gt;Web&lt;/code&gt; utilizando
+&lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt;. O framework realmente era excelente, mas problema foi a encontrar profissional.
+Diante disso, fui obrigado a trocar de tecnologia.&lt;/p&gt;
+
+&lt;p&gt;Atualmente estou desenvolvendo um projeto com &lt;a href=&quot;https://laravel.com/&quot;&gt;Laravel&lt;/a&gt;, e estou tendo um excelente resultado.
+Estou tendo bastante cuidado em deixar a parte de &lt;code class=&quot;highlighter-rouge&quot;&gt;frontend&lt;/code&gt; totalmente separada do &lt;code class=&quot;highlighter-rouge&quot;&gt;backend&lt;/code&gt; para facilitar possíveis, futuras migrações de tecnologia.&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 21 Oct 2016 10:53:36 -0200</pubDate>
+        <link>https://leandrogehlen.github.io/not%C3%ADcias/2016/10/21/recomeco.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/not%C3%ADcias/2016/10/21/recomeco.html</guid>
+        
+        
+        <category>Notícias</category>
+        
+      </item>
+    
+      <item>
+        <title>Segurança Com SpringSecurity</title>
+        <description>&lt;p&gt;Quando desenvolvemos aplicações web, é quase impossível não nos preocuparmos com segurança, autenticação do usuário,
+e restrições de acesso.&lt;/p&gt;
+
+&lt;p&gt;Desenvolvendo uma aplicação simples, em que o nível de controle se restringe a controlar seu o usuário está autenticado ou não,
+o &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; nos permite utilizar a variável session e em conjunto com os filters resolver esta questão
+(este &lt;a href=&quot;http://www.itexto.net/devkico/?p=29&quot;&gt;link&lt;/a&gt; demonstra como implementar esta situação).&lt;/p&gt;
+
+&lt;p&gt;Porém quando nos deparamos, com sistemas maiores, onde necessitamos de um controle mais rigoroso, a implementação acima
+citada pode não ser suficiente, e apresentar falhas o que pode causar um enorme transtorno para o desenvolvedor.&lt;/p&gt;
+
+&lt;p&gt;Uma opção existente para a segurança de sistemas mais complexos, é o plugin &lt;a href=&quot;http://grails.org/plugin/spring-security-core&quot;&gt;SpringSecurity&lt;/a&gt;, com ele
+é possível criar uma aplicação segura em poucos minutos, facilitando e muito a vida do desenvolvedor.&lt;/p&gt;
+
+&lt;p&gt;Este plugin tem muitos recursos, neste post vamos implementar um simples controle de autenticação.&lt;/p&gt;
+
+&lt;p&gt;Para isso vamos criar a aplicacao de exemplo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grails create-app autenticacao&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Agora vamos adicionar a dependencia do plugin na sessão plugins do arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/conf/BuildConfig.groovy&lt;/code&gt; da
+seguinte forma:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;plugins&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;:spring-security-core:1.2.7.3&quot;&lt;/span&gt;
+
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Agora vamos executar o comando abaixo para que o grails efetue o download do plugin e o instale corretamente na aplicação:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grails refresh-dependencies&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;O plugin possuí um script para facilitar a sua configuração, e este deve ser executado da seguinte forma:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grails s2-quickstart br.com.teste Usuario Role&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Conforme é possível observar para executar o script é necessário passar 3 parâmetros. O primeiro diz respeito ao pacote
+onde serão gerada as duas classes de domínios necessárias, onde a primeira representa o usuário da apliação e a
+segunda é os papéis(roles) que o usuário pode assumir.&lt;/p&gt;
+
+&lt;p&gt;Este script também vai alterar o arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/conf/Config.groovy&lt;/code&gt; adicionando as seguintes linhas:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;plugins&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Added by the Spring Security Core plugin:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;grails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;springsecurity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;userLookup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;userDomainClassName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;br.com.teste.Usuario&#39;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;grails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;springsecurity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;userLookup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;authorityJoinClassName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;br.com.teste.UsuarioRole&#39;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;grails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;springsecurity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;authority&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;className&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;br.com.teste.Role&#39;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;O plugin também irá criar as views e os controllers para que o usuário efetue o login no aplição.&lt;/p&gt;
+
+&lt;p&gt;Agora vamos editar o arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/conf/BootStrap.groovy&lt;/code&gt; para que ao iniciar a aplição seja inserido o usuario
+teste e adcionando a role &lt;code class=&quot;highlighter-rouge&quot;&gt;ROLE_ADMIN&lt;/code&gt; a este usuário.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;br.com.teste.Role&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;br.com.teste.Usuario&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;br.com.teste.UsuarioRole&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;BootStrap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;kt&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;servletContext&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;kt&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;role&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Role&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;authority:&lt;/span&gt;  &lt;span class=&quot;s2&quot;&gt;&quot;ROLE_ADMIN&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;role&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;flush:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;kt&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;usuario&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Usuario&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;username:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;teste&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;password:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;teste&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;accountExpired:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;accountLocked:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;passwordExpired:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;enabled:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;usuario&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;flush:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;n&quot;&gt;UsuarioRole&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usuario&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;role&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;destroy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Agora é só executar o comando &lt;code class=&quot;highlighter-rouge&quot;&gt;grails run-app&lt;/code&gt; a aplicação e testar a autenticação do usuário.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 05 Aug 2013 20:23:37 -0300</pubDate>
+        <link>https://leandrogehlen.github.io/grails/2013/08/05/grails-springsecurity.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/grails/2013/08/05/grails-springsecurity.html</guid>
+        
+        
+        <category>Grails</category>
+        
+      </item>
+    
+      <item>
+        <title>Plugin Grails BrValidation</title>
+        <description>&lt;p&gt;Gostaria de apresentar um plugin para o &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt;, que tenho certeza que muitos desenvolvedores brasileiros precisam.&lt;/p&gt;
+
+&lt;p&gt;O &lt;a href=&quot;http://grails.org/plugin/br-validation&quot;&gt;BrValidation&lt;/a&gt; possuí validações de CPF, CNPJ e CEP. Também é possível configurá-lo para validar
+&lt;code class=&quot;highlighter-rouge&quot;&gt;CPF/CNPJ&lt;/code&gt; no mesmo campo e se estes utilizam ou não máscaras para validação.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 03 Aug 2013 19:07:48 -0300</pubDate>
+        <link>https://leandrogehlen.github.io/grails/2013/08/03/grails-brvalidation.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/grails/2013/08/03/grails-brvalidation.html</guid>
+        
+        
+        <category>Grails</category>
+        
+      </item>
+    
+      <item>
+        <title>Internacionalização Com Grails</title>
+        <description>&lt;p&gt;Apesar de muitos desenvolvedores, não tomar o cuidado de desenvolver suas aplicações com suporte a múltiplos idiomas,
+acredito ser bem relevante levar isto em consideração, afinal se estas aplicações ganharem proporções maiores e este
+requisito não foi analisado inicialmente, você terá uma enorme dor de cabeça para mudar isto.&lt;/p&gt;
+
+&lt;p&gt;Outro fator importante, é a que com a internacionalização ajuda a resolver o problema de codificação de caracteres nos
+arquivos.&lt;/p&gt;
+
+&lt;p&gt;Com certeza quem já desenvolveu aplicações web já deve ter passado pelo problema e aparecerem carácteres &lt;code class=&quot;highlighter-rouge&quot;&gt;coringas&lt;/code&gt; no
+lugar de caracteres acentuados ou o carácter &lt;code class=&quot;highlighter-rouge&quot;&gt;ç&lt;/code&gt;. Uma das soluções é utilizar a meta-tag:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;meta&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;http-equiv=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Content-Type&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;content=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text/html; charset=ISO-8859-1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Porém ao fazer isso teremos uma aplicação que irá funcionar apenas com caracteres latinos. Caso sua aplicação tenha que
+possuir um idioma como Japonês, por exemplo, este recurso não irá solucionar o problema.&lt;/p&gt;
+
+&lt;p&gt;Um dica importante para resolver os problemas de codificação, é trabalhar com sistema operacional, banco de dados e
+arquivos com o mesmo charset, preferencialmente UTF-8.&lt;/p&gt;
+
+&lt;p&gt;Com o &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt;, o uso de internacionalização, é praticamente intrínseco e para fazer uso deste recurso
+devemos entender como ele é organizado.&lt;/p&gt;
+
+&lt;p&gt;O &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt;, possuí o diretório &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/i18n&lt;/code&gt;, onde o nome de cada arquivo contido no diretório deve
+iniciar por &lt;code class=&quot;highlighter-rouge&quot;&gt;messages_&lt;/code&gt; e terminar com a localidade, conforme os exemplos abaixo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;messages.properties
+messages_en.properties
+messages_fr.properties
+messages_pt_BR.properties&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Por padrão Grails olha para o arquivo messages.properties a menos que o usuário tenha especificado a localidade.
+É possível criar seu próprio pacote de mensagens, para isso, basta criar um novo arquivo de propriedades que termina
+com o localidade que você está interessado. Por exemplo &lt;code class=&quot;highlighter-rouge&quot;&gt;messages_pt_BR.properties&lt;/code&gt; refere-se ao português brasileiro.&lt;/p&gt;
+
+&lt;h2 id=&quot;usando-as-mensagens&quot;&gt;Usando as mensagens&lt;/h2&gt;
+
+&lt;p&gt;O local mais comum para utilizar as mensagens é nos arquivos &lt;code class=&quot;highlighter-rouge&quot;&gt;.gsp&lt;/code&gt; contidos no diretório &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/view&lt;/code&gt;, para isso
+é possível utilizar a seguinte tag:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;g:message&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;code=&lt;/span&gt;&lt;span class=&quot;err&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;chave.da.mensagem&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Quando este recuso for utilizado o grails irá procurar no arquivo correspondente a localidade que o usuário está utilizando.
+Nele deve estar contido o conteúdo da mensagem conforme é demonstrado no exemplo abaixo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;chave.da.mensagem &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Olá mundo&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;É possível utilizar mensagem com argumentos, por exemplo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;g:message&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;code=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;chave.da.mensagem.com.arg&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;args=&lt;/span&gt;&lt;span class=&quot;err&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;${[&#39;Leandro&#39;,&#39;Internacionalização&#39;]}&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;A declaração mensagem especifica parâmetros posicionais que são dinamicamente especificados:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;chave.da.mensagem.com.arg &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Olá, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;. Você está aprendendo &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; em Grails.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Além disso podemos querer utilizar este recurso no classe de &lt;code class=&quot;highlighter-rouge&quot;&gt;controller&lt;/code&gt;, para isso podemos utilizar este recurso da
+seguinte forma:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;kt&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;show&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kt&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;code:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;chave.da.mensagem.com.arg&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;args:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;Leandro&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Internacionalização&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;concluso&quot;&gt;Conclusão&lt;/h2&gt;
+
+&lt;p&gt;Utilizando estes cuidados ao iniciar uma aplicação, com certeza será evitado futuras dores de cabeça, além de tornar
+sua aplicação flexível a qualquer idioma.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 30 May 2013 16:00:19 -0300</pubDate>
+        <link>https://leandrogehlen.github.io/grails/2013/05/30/grails-internacionalizacao.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/grails/2013/05/30/grails-internacionalizacao.html</guid>
+        
+        
+        <category>Grails</category>
+        
+      </item>
+    
+      <item>
+        <title>EasyUI - JQuery EasyUI From Grails</title>
+        <description>&lt;p&gt;É com grande satisfação que estou divulgando o plugin que desenvolvi para trabalhar com jQuery EasyUI. O plugin já está
+disponível no &lt;a href=&quot;https://grails.org/plugins/&quot;&gt;Repositório do Grails&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Ainda preciso melhorar a documentação e seguir com o próximo passo que são os scaffold. Mesmo assim já pode ser utilizado.
+Quem quiser conferir é só olhar o link: &lt;a href=&quot;http://grails.org/plugin/easyui&quot;&gt;http://grails.org/plugin/easyui&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 22 Feb 2013 16:31:19 -0300</pubDate>
+        <link>https://leandrogehlen.github.io/grails/2013/02/22/grails-easyui.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/grails/2013/02/22/grails-easyui.html</guid>
+        
+        
+        <category>Grails</category>
+        
+      </item>
+    
+      <item>
+        <title>Migrações do Banco de Dados com Grails</title>
+        <description>&lt;p&gt;Geralmente, vejo em tutoriais sobre Grails, demonstrarem primeiramente a geração de &lt;code class=&quot;highlighter-rouge&quot;&gt;Scaffold&lt;/code&gt;, por ser umas das
+funcionalidades que chama muito atenção pela facilidade e rapidez de se gerar um &lt;code class=&quot;highlighter-rouge&quot;&gt;CRUD&lt;/code&gt;. Porém acredito que para
+começarmos a programar o primeiro passo seria as migrações da base de dados.&lt;/p&gt;
+
+&lt;p&gt;Apesar do &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; criar automaticamente o esquema do banco de dados através do &lt;a href=&quot;http://hibernate.org/&quot;&gt;Hibernate&lt;/a&gt;,
+e isso contribuir para se iniciar rapidamente o desenvolvimento de uma aplicação Web, o que parece ser um facilitador
+pode se tornar em um grande transtorno quando esta aplicação se mover para a produção.&lt;/p&gt;
+
+&lt;p&gt;Quando o &lt;a href=&quot;http://hibernate.org/&quot;&gt;Hibernate&lt;/a&gt; realiza as operações no seu esquema de banco de dados, não leva em consideração se
+sua aplicação pode perder dados. Além da perca dos dados a aplicação poderá ficar com sua estrutura de banco de dados
+diferente das classes de domínio, dependendo do forma de atualização do esquema que escolhermos, o &lt;a href=&quot;http://hibernate.org/&quot;&gt;Hibernate&lt;/a&gt;
+não removerá nada, apenas irá criar o que esta faltando.&lt;/p&gt;
+
+&lt;p&gt;Tendo isto em vista o &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; possuí o plugin &lt;a href=&quot;http://grails.org/plugin/database-migration&quot;&gt;Grails Database Migration Plugin&lt;/a&gt;,
+com ele podemos criar um script de atualização deste esquema, o que nos proporciona a criação ou remoção de estruturas
+de forma segura, mantendo nosso esquema de base de dados sincronizado com as classes de domínio da aplicação.&lt;/p&gt;
+
+&lt;p&gt;Para demonstrar a utilização deste plugin vamos criar uma aplicação nova. Para isso abra o terminal de seu computador
+e digite o seguinte comando:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grails create-app migracao&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Este comando irá criar toda a estrutura de sua aplicação e já estará instalado a versão 1.2.1 database-migration,
+aconselho atualizar este plugin para a versão 1.3.2 pois algumas correções foram realizadas e é importante que o plugin
+funcione correamente.&lt;/p&gt;
+
+&lt;p&gt;Para isso altere o arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;BuildConfig.groovy&lt;/code&gt; que está em &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/conf&lt;/code&gt; do seu projeto, substituindo a versão
+&lt;code class=&quot;highlighter-rouge&quot;&gt;1.2.1&lt;/code&gt; para &lt;code class=&quot;highlighter-rouge&quot;&gt;1.3.2&lt;/code&gt;. Com isso a sessão plugins deste arquivos deverá ficar da seguinte forma&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;plugins&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;runtime&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;:database-migration:1.3.2&quot;&lt;/span&gt;    
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;após a alteração salve o arquivo e execute o seguinte comando:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grails dbm-generate-changelog changelog-1.0.groovy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Este comando irá gerar o arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;changelog-1.0.groovy&lt;/code&gt; dentro do diretório &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/migration&lt;/code&gt;. Além deste arquivo vamos
+criar outro arquivo dentro deste mesmo diretório denominado changelog.groovy. Este será um arquivo mestre, que irá
+informar ao plugin quais os scripts devem ser executados, isto por que a cada nova versão de sua aplicação será gerado
+um novo arquivo de script.&lt;/p&gt;
+
+&lt;p&gt;Inicialemente arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;changelog.groovy&lt;/code&gt; terá o seguinte conteúdo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;databaseChangeLog&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;file:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;changelog-1.0.groovy&quot;&lt;/span&gt;   
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;O último passo é configurar como será executado estas migrações, para isso vamos alterar o arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;Config.groovy&lt;/code&gt; que
+se encontra em &lt;code class=&quot;highlighter-rouge&quot;&gt;grails-app/conf&lt;/code&gt;, adicionando as seguintes configurações:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;grails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;plugin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;databasemigration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;updateOnStart&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;grails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;plugin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;databasemigration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;updateOnStartFileNames&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;changelog.groovy&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;A primeira configuração informa ao plugin que as alterações do esquema serão executadas ao iniciar a aplicação.
+A segunda informa quais os arquivos de script devem ser executados&lt;/p&gt;
+
+&lt;p&gt;Caso queira executar manualmente os scripts deve-se remover a primeira configuração e executar o seguinte comando&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;grails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dbm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Antes de iniciar a aplicação vamos configurar o arquivo DataSource.groovy para que ele não utilize a atualização pelo
+&lt;a href=&quot;http://hibernate.org/&quot;&gt;Hibernate&lt;/a&gt;, para isso vamos comentar a linha &lt;code class=&quot;highlighter-rouge&quot;&gt;dbCreate = “create-drop”&lt;/code&gt; deixando o arquivo da
+seguinte forma:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;environments&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;development&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;c1&quot;&gt;//dbCreate = &quot;create-drop&quot; // one of &#39;create&#39;, &#39;create-drop&#39;, &#39;update&#39;, &#39;validate&#39;, &#39;&#39;&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000&quot;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Vamor executar a aplicação através do comando:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;grails run-app&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;O plugin fornece uma ferramenta de documentação de suas migrações para ver essa documentação acesse
+&lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:8080/aula1-migracao/dbdoc&lt;/code&gt; pelo seu browser.&lt;/p&gt;
+
+&lt;p&gt;Agora vamos incluir o atributo &lt;code class=&quot;highlighter-rouge&quot;&gt;sexo&lt;/code&gt; na classe &lt;code class=&quot;highlighter-rouge&quot;&gt;Pessoa&lt;/code&gt;, deixando ela no seguinte formato:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Pessoa&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nome&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sobreNome&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Date&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataNasc&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sexo&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;belongsTo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;cidade:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Cidade&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;constraints&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;nome&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;blank:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;sobreNome&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;blank:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;dataNasc&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;blank:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;sexo&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;inList:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;M&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;F&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Neste momento vamos alterar manualmente o arquivo changelog-1.0.groovy para adicionar uma coluna na tabela pessoa
+adicionando o seguinte conteúdo ao arquivo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-groovy&quot; data-lang=&quot;groovy&quot;&gt;&lt;span class=&quot;n&quot;&gt;changeSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;author:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;leandro (generated)&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;id:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;1364128026256-4&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;comment&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Adicionado coluna sexo&#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;addColumn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;tableName:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;pessoa&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;column&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;name:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;sexo&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;type:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;varchar(1)&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;n&quot;&gt;constraints&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;nullable:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;false&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;A geração do script pelo comando dbm-generate-changelog pode ser utilizada até o momento em que a versão da aplicação
+não está em produção, pois este comando não compara o que tem no script atual para gerar as diferenças, ele simplesmente
+gera um novo script criando toda a estrutura a partir das classes de domínio.&lt;/p&gt;
+
+&lt;p&gt;Eu particularmente não utilizo a geração, acho mais confiável ir criando os scripts.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 18 Feb 2013 12:31:19 -0300</pubDate>
+        <link>https://leandrogehlen.github.io/grails/2013/02/18/grails-migracoes.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/grails/2013/02/18/grails-migracoes.html</guid>
+        
+        
+        <category>Grails</category>
+        
+      </item>
+    
+      <item>
+        <title>Instalação Redmine(Debian)</title>
+        <description>&lt;p&gt;Demorou, mas estou postando novamente.&lt;/p&gt;
+
+&lt;p&gt;Hoje gostaria de apresentar uma ferramente para gerenciamento de projetos de software, o &lt;a href=&quot;http://www.redmine.org/&quot;&gt;Redmine&lt;/a&gt;.
+Dentre todos os gerenciadores que já utilizei este é o mais simples e o mais completo que encontrei.&lt;/p&gt;
+
+&lt;p&gt;Não irei falar sobre como utilizar esta ferramenta, mas sim, como realizar sua instalação em um servidor &lt;code class=&quot;highlighter-rouge&quot;&gt;Linux Debian&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;O &lt;a href=&quot;http://www.redmine.org/&quot;&gt;Redmine&lt;/a&gt; é desenvolvido sobre a plataforma &lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby on Rails&lt;/code&gt;, isto significa que é necessário instalarmos
+o framework em nosso servidor.&lt;/p&gt;
+
+&lt;p&gt;É possível realizar esta instalação através do &lt;code class=&quot;highlighter-rouge&quot;&gt;aptitude (apt-get)&lt;/code&gt;, que torna este processo bem mais fácil,
+o inconveniente é que estaremos utilizando uma versão 1.4 do &lt;a href=&quot;http://www.redmine.org/&quot;&gt;Redmine&lt;/a&gt; enquanto a versão estável mais
+recente é &lt;code class=&quot;highlighter-rouge&quot;&gt;2.2&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Primeiramente devemos instalar o &lt;a href=&quot;https://rvm.io/&quot;&gt;RVM&lt;/a&gt;, que é um gerenciador de versões para o &lt;a href=&quot;https://www.ruby-lang.org/&quot;&gt;Ruby&lt;/a&gt;, para isto,
+primeiramente vamos instalar suas dependências executando o seguinte comando:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;aptitude install autoconf automake autotools-dev build-essential bison bzip2 curl git libreadline5 libxml2-dev libmysqlclient-dev libreadline5-dev libruby openssl libssl-dev zlib1g zlib1g-dev zlibc git-core gcc make libxml2-dev libxslt-dev libopenssl-ruby libncurses5-dev libapr1-dev libaprutil1-dev build-essential libcurl4-openssl-dev libmagickwand-dev mysql-client apache2-prefork-dev libsqlite3-0 libsqlite3-dev sqlite3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Agora iremos instalar o &lt;a href=&quot;https://rvm.io/&quot;&gt;RVM&lt;/a&gt; e o &lt;code class=&quot;highlighter-rouge&quot;&gt;Rails&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;bash -s stable &amp;lt;&amp;lt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; /usr/local/rvm/scripts/rvm
+rvm install 1.9.3
+rvm --default use 1.9.3
+gem install rails&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Com o &lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby on Rails&lt;/code&gt; instalado o próximo passo é instalar o &lt;a href=&quot;http://www.redmine.org/&quot;&gt;Redmine&lt;/a&gt;, para isso vamos baixar o projeto e
+descompactar o arquivo da seguinte forma:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;wget http://rubyforge.org/frs/download.php/76722/redmine-2.2.2.tar.gz
+tar -C /opt/  -vzxf redmine-2.2.2.tar.gz
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /opt
+mv redmine-2.2.2 redmine&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Note que estou instalando o Redmine na pasta &lt;code class=&quot;highlighter-rouge&quot;&gt;/opt&lt;/code&gt; do servidor, porém pode ser instalado em qualquer pasta de sua preferencia.&lt;/p&gt;
+
+&lt;p&gt;Agora vamos iniciar as configurações&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /opt/redmine
+gem install bundler
+bundle install --without development &lt;span class=&quot;nb&quot;&gt;test &lt;/span&gt;postgresql sqlite
+rake generate_secret_token&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Note que na linha 3 estou instalando as dependências &lt;strong&gt;SEM&lt;/strong&gt; o ambiente de desenvolvimento e teste, além dos pacotes
+&lt;code class=&quot;highlighter-rouge&quot;&gt;postgresql&lt;/code&gt; e &lt;code class=&quot;highlighter-rouge&quot;&gt;sqlite&lt;/code&gt;, isto por que optei por utilizar o &lt;code class=&quot;highlighter-rouge&quot;&gt;mysql&lt;/code&gt; como gerênciador de banco de dados.&lt;/p&gt;
+
+&lt;p&gt;O próximo passo é criar a base de dados. Para isso acesse o mysql e execute os seguintes comandos:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;create database redmine character &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;utf8;
+create user &lt;span class=&quot;s1&quot;&gt;&#39;redmine&#39;&lt;/span&gt;@&lt;span class=&quot;s1&quot;&gt;&#39;localhost&#39;&lt;/span&gt; identified by &lt;span class=&quot;s1&quot;&gt;&#39;sua_senha&#39;&lt;/span&gt;;
+grant all privileges on redmine.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; to &lt;span class=&quot;s1&quot;&gt;&#39;redmine&#39;&lt;/span&gt;@&lt;span class=&quot;s1&quot;&gt;&#39;localhost&#39;&lt;/span&gt;;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Criada a base de dados vamos editar o arquivo de configuração da conexão da seguinte forma:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;cp /opt/redmine/config/database.yml.example  /opt/redmine/config/database.yml
+vim /opt/redmine/config/database.yml&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Altere o arquivo de acordo com o nome da base, usuário e senha que foram criados anteriormente, conforme o exemplo abaixo:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span class=&quot;s&quot;&gt;production&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;adapter&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;mysql2&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;database&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redmine&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;localhost&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redmine&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;sua_senha&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Vamos executar as migrações da base de dados e iniciar a carga dos dados, executando os seguintes comandos:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;&lt;span class=&quot;nv&quot;&gt;RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production rake db:migrate
+&lt;span class=&quot;nv&quot;&gt;RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production &lt;span class=&quot;nv&quot;&gt;REDMINE_LANG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pt-BR rake redmine:load_default_data&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Também precisamos criar algumas pastas necessárias e alterar suas permissões:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;mkdir tmp tmp/pdf public/plugin_assets
+chown -R www-data:www-data files log tmp public/plugin_assets
+chmod -R 755 files log tmp public/plugin_assets&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Para testar a instalação vamos iniciar o servidor rails:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;ruby script/rails server webrick -e production&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Acesse &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:3000&lt;/code&gt;, e pode começar a utiliza-lo fazendo login no sistema através da seguinte autenticação:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;Usuário: admin
+Senha: admin&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;integrao-com-o-apache&quot;&gt;Integração com o Apache&lt;/h2&gt;
+
+&lt;p&gt;Para integrar o &lt;a href=&quot;http://www.redmine.org/&quot;&gt;Redmine&lt;/a&gt; ao &lt;code class=&quot;highlighter-rouge&quot;&gt;Apache&lt;/code&gt; vamos instalar o módulo e a &lt;strong&gt;gem passenger&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;aptitude install libapache2-mod-passenger
+gem install passenger
+passenger-install-apache2-module&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Vamos criar um link do diretório &lt;code class=&quot;highlighter-rouge&quot;&gt;public&lt;/code&gt; do redmine apontando a diretório &lt;code class=&quot;highlighter-rouge&quot;&gt;www&lt;/code&gt; do apache&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sh&quot; data-lang=&quot;sh&quot;&gt;ln -s /opt/redmine/public /var/www/redmine&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;O próximo passo é alterar as configurações do apache para que ele utilize o módulo passenger quando solicitado a url do
+&lt;a href=&quot;http://www.redmine.org/&quot;&gt;Redmine&lt;/a&gt;. Adicione a seguinte configuração no arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/apache2/sites-available/default&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&amp;lt;Directory /var/www/redmine&amp;gt;
+  PassengerAppRoot /opt/redmine
+  RailsEnv production
+  RailsBaseURI /redmine
+  PassengerResolveSymlinksInDocumentRoot on
+&amp;lt;/Directory&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Como instalamos o &lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby on Rails&lt;/code&gt; a partir do &lt;a href=&quot;https://rvm.io/&quot;&gt;RVM&lt;/a&gt; é necessário alterar as configurações do módulo passenger.
+Para isso devemos alterar o arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/apache2/mods-available/passenger.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&amp;lt;IfModule mod_passenger.c&amp;gt;
+  PassengerRoot /usr/local/rvm/gems/ruby-1.9.3-p374/gems/passenger-3.0.19
+  PassengerRuby /usr/local/rvm/wrappers/ruby-1.9.3-p374/ruby
+  PassengerDefaultUser www-data           
+&amp;lt;/IfModule&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Por fim vamos alterar o arquivo &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/apache2/mods-available/passenger.load&lt;/code&gt;:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;LoadModule passenger_module /usr/local/rvm/gems/ruby-1.9.3-p374/gems/passenger-3.0.19/ext/apache2/mod_passenger.so&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Agora é só habilitar o módulo passenger e reiniciar o &lt;code class=&quot;highlighter-rouge&quot;&gt;Apache&lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;a2enmod passenger
+/etc/init.d/apache2 restart&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Pronto, podemos acessar o &lt;a href=&quot;http://www.redmine.org/&quot;&gt;Redmine&lt;/a&gt; da seguinte forma:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost/redmine&lt;/code&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 26 Jan 2013 11:10:25 -0200</pubDate>
+        <link>https://leandrogehlen.github.io/ferramentas/2013/01/26/instalacao-redmine-debian.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/ferramentas/2013/01/26/instalacao-redmine-debian.html</guid>
+        
+        
+        <category>Ferramentas</category>
+        
+      </item>
+    
+      <item>
+        <title>Por Que Grails?</title>
+        <description>&lt;p&gt;Vou começar falando sobre por que escolhi &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; e quais os pontos são necessários analisar  no nomento
+de escolher uma ferrementa de desenvolvimento.&lt;/p&gt;
+
+&lt;h2 id=&quot;acesso-a-base-de-dados&quot;&gt;Acesso a base de dados&lt;/h2&gt;
+
+&lt;p&gt;Acredito que atualmente, é necessário escolher algo que possua suporte a múltiplas bases de dados. Apesar de existir
+inúmeras tecnologias fornecerem ferramentas para criar uma aplicação que suporte conexão com múltiplos bancos de dados,
+ainda tem muito desenvolvedor utilzando PL/SQL tornando sistemas ingessados e colocando fim na questão escalabilidade.&lt;/p&gt;
+
+&lt;p&gt;O &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; possuí o &lt;a href=&quot;http://docs.grails.org/latest/guide/GORM.html&quot;&gt;GORM&lt;/a&gt; um framework de persistência baseado em &lt;code class=&quot;highlighter-rouge&quot;&gt;ActiveRecords&lt;/code&gt; do &lt;a href=&quot;https://laravel.com/&quot;&gt;RubyOnRails&lt;/a&gt; e
+tem como base o consagrado &lt;a href=&quot;http://hibernate.org/&quot;&gt;Hibernate&lt;/a&gt; no mundo Java.&lt;/p&gt;
+
+&lt;h2 id=&quot;migraes&quot;&gt;Migrações&lt;/h2&gt;
+
+&lt;p&gt;O &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; possuí o &lt;a href=&quot;http://grails.org/plugin/database-migration&quot;&gt;Database Migration Plugin&lt;/a&gt;, que torna possível criar scripts para migrar a
+base de dados. Este script é totalmente &lt;code class=&quot;highlighter-rouge&quot;&gt;DSL&lt;/code&gt;, tornando fácil a criação, alteração ou exclusão de objetos ou registros.&lt;/p&gt;
+
+&lt;h2 id=&quot;segurana&quot;&gt;Segurança&lt;/h2&gt;
+
+&lt;p&gt;Bom, é imprescindível que um sistemas tenha segurança no acesso aos dados. O &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; possuí filters que são
+interceptadores de requisições, onde é possível definir as regras para permissão ou proibição do acesso.
+Caso seja necessário um controle mais rígido é possível utilizar o plugin &lt;a href=&quot;http://grails.org/plugin/spring-security-core&quot;&gt;Spring-Security&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;escalabilidade&quot;&gt;Escalabilidade&lt;/h2&gt;
+
+&lt;p&gt;Vou considerar este item, como sendo a capacidade de um sistema estar preparado para crescer em todos seus aspectos.
+Fazer com que isto seja possível depende muito da modelagem deste sistema e isto pouco depende da tecnlogia.
+Porém é necessário que a tecnologia escolhida forneça as ferramentas para isto. O &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; poussuí uma
+central de plugins, que torna fácil adaptar seu sistema a inúmeras funcionalidas como por exemplo &lt;code class=&quot;highlighter-rouge&quot;&gt;Multi-tenancy&lt;/code&gt;,
+segurança, migrações entre outros.&lt;/p&gt;
+
+&lt;h2 id=&quot;facilidade-no-desenvolvimento&quot;&gt;Facilidade no desenvolvimento&lt;/h2&gt;
+
+&lt;p&gt;Neste ponto, quero relatar sobre a linguagem &lt;a href=&quot;http://www.groovy-lang.org/&quot;&gt;Groovy&lt;/a&gt;, que por ser uma linguagem funcional nos dá uma
+facilidade enorme na hora de produzir código. Além disso, para mim que estou vindo do mundo Java e optei por manter um
+software sobre a JVM, o &lt;a href=&quot;http://www.groovy-lang.org/&quot;&gt;Groovy&lt;/a&gt; integra com todas as classes Java existentes, além de poder produzir
+código &lt;code class=&quot;highlighter-rouge&quot;&gt;Groovy&lt;/code&gt; ou &lt;code class=&quot;highlighter-rouge&quot;&gt;Java&lt;/code&gt;.
+Outro item interessante são os &lt;a href=&quot;http://docs.grails.org/latest/guide/scaffolding.html&quot;&gt;Scaffolding&lt;/a&gt;. Com eles é possível gerar toda a parte de &lt;code class=&quot;highlighter-rouge&quot;&gt;CRUD&lt;/code&gt; da
+sua aplicação.&lt;/p&gt;
+
+&lt;h2 id=&quot;testes&quot;&gt;Testes&lt;/h2&gt;
+
+&lt;p&gt;Apesar de muitos desenvolvedores ainda não utilizarem testes automatizados, acredito este ser o requisisto é o mais
+importante.
+O &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt; poussuí tanto testes unitários quanto testes de integração.&lt;/p&gt;
+
+&lt;h2 id=&quot;concluso&quot;&gt;Conclusão&lt;/h2&gt;
+
+&lt;p&gt;A minha escolha pelo &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt;  levou em consideração além dos pontos citados, a curva de aprendizado ser
+menor por já conhecer a plataforma &lt;code class=&quot;highlighter-rouge&quot;&gt;Java&lt;/code&gt;, a boa documentação existente, por ser desenvolvido sobre frameworks
+consolidados no mercado como: &lt;a href=&quot;http://hibernate.org/&quot;&gt;Hibernate&lt;/a&gt;, &lt;a href=&quot;https://projects.spring.io/spring-framework/&quot;&gt;Spring&lt;/a&gt;, e por ter exemplos de sucesso como o
+&lt;a href=&quot;http://www.linkedin.com/&quot;&gt;Linkedin&lt;/a&gt; e a &lt;a href=&quot;http://www.sky.com/&quot;&gt;Sky&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 10 Dec 2012 10:30:20 -0200</pubDate>
+        <link>https://leandrogehlen.github.io/grails/2012/12/10/por-que-grails.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/grails/2012/12/10/por-que-grails.html</guid>
+        
+        
+        <category>Grails</category>
+        
+      </item>
+    
+      <item>
+        <title>O Início</title>
+        <description>&lt;p&gt;Enfim estou inciando meu blog. Gostaria de compartilhar aqui algumas experiências adquidas na área de desenvolvimento
+de software.&lt;/p&gt;
+
+&lt;p&gt;Durante meus 9 anos nesta área “experimentei” várias tecnologias, começando por &lt;code class=&quot;highlighter-rouge&quot;&gt;Delphi&lt;/code&gt;, passando por &lt;code class=&quot;highlighter-rouge&quot;&gt;PHP&lt;/code&gt;, depois &lt;code class=&quot;highlighter-rouge&quot;&gt;Java&lt;/code&gt;
+e por fim encontrei o &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt;.
+Quero ter este espaço para falar de todas as tecnologias que já utilizei, mostrar alguns atalhos e soluções que realmente
+foram aplicadas na prática.&lt;/p&gt;
+
+&lt;p&gt;O projeto que estou iniciando será desenvolvido em &lt;a href=&quot;https://grails.org/&quot;&gt;Grails&lt;/a&gt;, sendo assim no próximo post estarei falando
+do porque desta escolha.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 08 Dec 2012 16:24:36 -0200</pubDate>
+        <link>https://leandrogehlen.github.io/not%C3%ADcias/2012/12/08/inicio.html</link>
+        <guid isPermaLink="true">https://leandrogehlen.github.io/not%C3%ADcias/2012/12/08/inicio.html</guid>
+        
+        
+        <category>Notícias</category>
+        
+      </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
+
+    <title>Instalação Redmine(Debian)</title>
+    <meta name="description"
+          content="Demorou, mas estou postando novamente.">
+
+    <link rel="canonical" href="https://leandrogehlen.github.io/ferramentas/2013/01/26/instalacao-redmine-debian.html">
+    <link rel="alternate" type="application/rss+xml" title="Leandro Guindani Gehlen" href="https://leandrogehlen.github.io/feed.xml">
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Third-Party CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/bower_components/hover/css/hover-min.css">
+    <link rel="stylesheet" href="/bower_components/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/assets/css/common.css">
+
+    <!-- CSS set in page -->
+    
+
+    <!-- CSS set in layout -->
+    
+    <link rel="stylesheet" href="/assets/css/sidebar-post-nav.css">
+    
+
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+    <div class="container">
+        <a id="site-header-brand" href="/" title="leandrogehlen">
+            <span class="octicon octicon-mark-github"></span> leandrogehlen
+        </a>
+        <nav class="site-header-nav" role="navigation">
+            
+            <a href="/"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Home">
+                Home
+            </a>
+            
+            <a href="/repos"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Repositórios">
+                Repositórios
+            </a>
+            
+            <a href="/blog"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Blog">
+                Blog
+            </a>
+            
+            <a href="/about"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Sobre">
+                Sobre
+            </a>
+            
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <section class="jumbotron geopattern" data-pattern-id="Instalação Redmine(Debian)">
+    <div class="container">
+        <div id="jumbotron-meta-info">
+            <h1>Instalação Redmine(Debian)</h1>
+            <span class="meta-info">
+                
+                
+                <span class="octicon octicon-calendar"></span> 2013/01/26
+                
+            </span>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+
+        $('.geopattern').each(function(){
+            $(this).geopattern($(this).data('pattern-id'));
+        });
+
+    });
+</script>
+<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="row">
+
+        
+        <div class="col-md-8 markdown-body">
+
+            <p>Demorou, mas estou postando novamente.</p>
+
+<p>Hoje gostaria de apresentar uma ferramente para gerenciamento de projetos de software, o <a href="http://www.redmine.org/">Redmine</a>.
+Dentre todos os gerenciadores que já utilizei este é o mais simples e o mais completo que encontrei.</p>
+
+<p>Não irei falar sobre como utilizar esta ferramenta, mas sim, como realizar sua instalação em um servidor <code class="highlighter-rouge">Linux Debian</code>.</p>
+
+<p>O <a href="http://www.redmine.org/">Redmine</a> é desenvolvido sobre a plataforma <code class="highlighter-rouge">Ruby on Rails</code>, isto significa que é necessário instalarmos
+o framework em nosso servidor.</p>
+
+<p>É possível realizar esta instalação através do <code class="highlighter-rouge">aptitude (apt-get)</code>, que torna este processo bem mais fácil,
+o inconveniente é que estaremos utilizando uma versão 1.4 do <a href="http://www.redmine.org/">Redmine</a> enquanto a versão estável mais
+recente é <code class="highlighter-rouge">2.2</code>.</p>
+
+<p>Primeiramente devemos instalar o <a href="https://rvm.io/">RVM</a>, que é um gerenciador de versões para o <a href="https://www.ruby-lang.org/">Ruby</a>, para isto,
+primeiramente vamos instalar suas dependências executando o seguinte comando:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">aptitude install autoconf automake autotools-dev build-essential bison bzip2 curl git libreadline5 libxml2-dev libmysqlclient-dev libreadline5-dev libruby openssl libssl-dev zlib1g zlib1g-dev zlibc git-core gcc make libxml2-dev libxslt-dev libopenssl-ruby libncurses5-dev libapr1-dev libaprutil1-dev build-essential libcurl4-openssl-dev libmagickwand-dev mysql-client apache2-prefork-dev libsqlite3-0 libsqlite3-dev sqlite3</code></pre></figure>
+
+<p>Agora iremos instalar o <a href="https://rvm.io/">RVM</a> e o <code class="highlighter-rouge">Rails</code></p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">bash -s stable &lt;&lt; <span class="o">(</span>curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer<span class="o">)</span>
+<span class="nb">source</span> /usr/local/rvm/scripts/rvm
+rvm install 1.9.3
+rvm --default use 1.9.3
+gem install rails</code></pre></figure>
+
+<p>Com o <code class="highlighter-rouge">Ruby on Rails</code> instalado o próximo passo é instalar o <a href="http://www.redmine.org/">Redmine</a>, para isso vamos baixar o projeto e
+descompactar o arquivo da seguinte forma:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">wget http://rubyforge.org/frs/download.php/76722/redmine-2.2.2.tar.gz
+tar -C /opt/  -vzxf redmine-2.2.2.tar.gz
+<span class="nb">cd</span> /opt
+mv redmine-2.2.2 redmine</code></pre></figure>
+
+<p>Note que estou instalando o Redmine na pasta <code class="highlighter-rouge">/opt</code> do servidor, porém pode ser instalado em qualquer pasta de sua preferencia.</p>
+
+<p>Agora vamos iniciar as configurações</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nb">cd</span> /opt/redmine
+gem install bundler
+bundle install --without development <span class="nb">test </span>postgresql sqlite
+rake generate_secret_token</code></pre></figure>
+
+<p>Note que na linha 3 estou instalando as dependências <strong>SEM</strong> o ambiente de desenvolvimento e teste, além dos pacotes
+<code class="highlighter-rouge">postgresql</code> e <code class="highlighter-rouge">sqlite</code>, isto por que optei por utilizar o <code class="highlighter-rouge">mysql</code> como gerênciador de banco de dados.</p>
+
+<p>O próximo passo é criar a base de dados. Para isso acesse o mysql e execute os seguintes comandos:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">create database redmine character <span class="nb">set </span>utf8;
+create user <span class="s1">'redmine'</span>@<span class="s1">'localhost'</span> identified by <span class="s1">'sua_senha'</span>;
+grant all privileges on redmine.<span class="k">*</span> to <span class="s1">'redmine'</span>@<span class="s1">'localhost'</span>;</code></pre></figure>
+
+<p>Criada a base de dados vamos editar o arquivo de configuração da conexão da seguinte forma:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">cp /opt/redmine/config/database.yml.example  /opt/redmine/config/database.yml
+vim /opt/redmine/config/database.yml</code></pre></figure>
+
+<p>Altere o arquivo de acordo com o nome da base, usuário e senha que foram criados anteriormente, conforme o exemplo abaixo:</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="s">production</span><span class="pi">:</span>
+  <span class="s">adapter</span><span class="pi">:</span> <span class="s">mysql2</span>
+  <span class="s">database</span><span class="pi">:</span> <span class="s">redmine</span>
+  <span class="s">host</span><span class="pi">:</span> <span class="s">localhost</span>
+  <span class="s">username</span><span class="pi">:</span> <span class="s">redmine</span>
+  <span class="s">password</span><span class="pi">:</span> <span class="s">sua_senha</span></code></pre></figure>
+
+<p>Vamos executar as migrações da base de dados e iniciar a carga dos dados, executando os seguintes comandos:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="nv">RAILS_ENV</span><span class="o">=</span>production rake db:migrate
+<span class="nv">RAILS_ENV</span><span class="o">=</span>production <span class="nv">REDMINE_LANG</span><span class="o">=</span>pt-BR rake redmine:load_default_data</code></pre></figure>
+
+<p>Também precisamos criar algumas pastas necessárias e alterar suas permissões:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">mkdir tmp tmp/pdf public/plugin_assets
+chown -R www-data:www-data files log tmp public/plugin_assets
+chmod -R 755 files log tmp public/plugin_assets</code></pre></figure>
+
+<p>Para testar a instalação vamos iniciar o servidor rails:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">ruby script/rails server webrick -e production</code></pre></figure>
+
+<p>Acesse <code class="highlighter-rouge">http://localhost:3000</code>, e pode começar a utiliza-lo fazendo login no sistema através da seguinte autenticação:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">Usuário: admin
+Senha: admin</code></pre></figure>
+
+<h2 id="integrao-com-o-apache">Integração com o Apache</h2>
+
+<p>Para integrar o <a href="http://www.redmine.org/">Redmine</a> ao <code class="highlighter-rouge">Apache</code> vamos instalar o módulo e a <strong>gem passenger</strong>:</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">aptitude install libapache2-mod-passenger
+gem install passenger
+passenger-install-apache2-module</code></pre></figure>
+
+<p>Vamos criar um link do diretório <code class="highlighter-rouge">public</code> do redmine apontando a diretório <code class="highlighter-rouge">www</code> do apache</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh">ln -s /opt/redmine/public /var/www/redmine</code></pre></figure>
+
+<p>O próximo passo é alterar as configurações do apache para que ele utilize o módulo passenger quando solicitado a url do
+<a href="http://www.redmine.org/">Redmine</a>. Adicione a seguinte configuração no arquivo <code class="highlighter-rouge">/etc/apache2/sites-available/default</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">&lt;Directory /var/www/redmine&gt;
+  PassengerAppRoot /opt/redmine
+  RailsEnv production
+  RailsBaseURI /redmine
+  PassengerResolveSymlinksInDocumentRoot on
+&lt;/Directory&gt;</code></pre></figure>
+
+<p>Como instalamos o <code class="highlighter-rouge">Ruby on Rails</code> a partir do <a href="https://rvm.io/">RVM</a> é necessário alterar as configurações do módulo passenger.
+Para isso devemos alterar o arquivo <code class="highlighter-rouge">/etc/apache2/mods-available/passenger.conf</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">&lt;IfModule mod_passenger.c&gt;
+  PassengerRoot /usr/local/rvm/gems/ruby-1.9.3-p374/gems/passenger-3.0.19
+  PassengerRuby /usr/local/rvm/wrappers/ruby-1.9.3-p374/ruby
+  PassengerDefaultUser www-data           
+&lt;/IfModule&gt;</code></pre></figure>
+
+<p>Por fim vamos alterar o arquivo <code class="highlighter-rouge">/etc/apache2/mods-available/passenger.load</code>:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">LoadModule passenger_module /usr/local/rvm/gems/ruby-1.9.3-p374/gems/passenger-3.0.19/ext/apache2/mod_passenger.so</code></pre></figure>
+
+<p>Agora é só habilitar o módulo passenger e reiniciar o <code class="highlighter-rouge">Apache</code></p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">a2enmod passenger
+/etc/init.d/apache2 restart</code></pre></figure>
+
+<p>Pronto, podemos acessar o <a href="http://www.redmine.org/">Redmine</a> da seguinte forma:</p>
+
+<p><code class="highlighter-rouge">http://localhost/redmine</code></p>
+
+
+
+            <!-- Comments -->
+            
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+         * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        /*
+         var disqus_config = function () {
+         this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+         this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+         };
+         */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+
+            s.src = '//http-leandrogehlen-github-io.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+        </div>
+
+        <div class="col-md-4">
+            <h3>Índice</h3>
+<div id="post-directory-module">
+<section class="post-directory">
+    <!-- Links that trigger the jumping -->
+    <!-- Added by javascript below -->
+    <dl></dl>
+</section>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $( "article h2" ).each(function( index ) {
+            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+                    $(this).attr("id")
+                    + ">"
+                    + $(this).text()
+                    + "</a></dt>");
+
+            var children = $(this).nextUntil("h2", "h3")
+
+            children.each(function( index ) {
+                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
+                        $(this).attr("id")
+                        + ">"
+                        + "&nbsp;&nbsp;- " + $(this).text()
+                        + "</a></dd>");
+            });
+        });
+
+        var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
+
+        $(window).scroll(function() {                  // assign scroll event listener
+
+            var currentScroll = $(window).scrollTop(); // get current position
+
+            if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+                $('#post-directory-module').css({      // scroll to that element or below it
+                    top: '100px',
+                    position: 'fixed',
+                    width: 'inherit'
+                });
+            } else {                                   // apply position: static
+                $('#post-directory-module').css({      // if you scroll above it
+                    position: 'inherit',
+                    width: 'inherit'
+                });
+            }
+
+        });
+
+        $("a.jumper").on("click", function( e ) {
+
+            e.preventDefault();
+
+            $("body, html").animate({
+                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
+            }, 600);
+
+        });
+    });
+
+</script>
+
+        </div>
+        
+
+    </div>
+
+</article>
+
+        </div>
+
+    <footer class="container">
+
+    <div class="site-footer">
+
+        <div class="copyright pull-left">
+            <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
+            Power by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
+        </div>
+
+        <a href="https://github.com/DONGChuan" target="_blank" aria-label="view source code">
+            <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+        </a>
+
+        <div class="pull-right">
+            <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+        </div>
+
+    </div>
+
+    <!-- Third-Party JS -->
+    <script type="text/javascript" src="/bower_components/geopattern/js/geopattern.min.js"></script>
+
+    <!-- My JS -->
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+
+    
+
+    
+    <!-- Google Analytics -->
+    <div style="display:none">
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'tracking_id', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+    </div>
+    
+
+</footer>
+
+
+    </body>
+
+</html>

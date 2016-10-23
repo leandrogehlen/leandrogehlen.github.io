@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
+
+    <title>Internacionalização Com Grails</title>
+    <meta name="description"
+          content="Apesar de muitos desenvolvedores, não tomar o cuidado de desenvolver suas aplicações com suporte a múltiplos idiomas,acredito ser bem relevante levar isto em...">
+
+    <link rel="canonical" href="https://leandrogehlen.github.io/grails/2013/05/30/grails-internacionalizacao.html">
+    <link rel="alternate" type="application/rss+xml" title="Leandro Guindani Gehlen" href="https://leandrogehlen.github.io/feed.xml">
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Third-Party CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/bower_components/hover/css/hover-min.css">
+    <link rel="stylesheet" href="/bower_components/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/assets/css/common.css">
+
+    <!-- CSS set in page -->
+    
+
+    <!-- CSS set in layout -->
+    
+    <link rel="stylesheet" href="/assets/css/sidebar-post-nav.css">
+    
+
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+    <div class="container">
+        <a id="site-header-brand" href="/" title="leandrogehlen">
+            <span class="octicon octicon-mark-github"></span> leandrogehlen
+        </a>
+        <nav class="site-header-nav" role="navigation">
+            
+            <a href="/"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Home">
+                Home
+            </a>
+            
+            <a href="/repos"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Repositórios">
+                Repositórios
+            </a>
+            
+            <a href="/blog"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Blog">
+                Blog
+            </a>
+            
+            <a href="/about"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Sobre">
+                Sobre
+            </a>
+            
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <section class="jumbotron geopattern" data-pattern-id="Internacionalização Com Grails">
+    <div class="container">
+        <div id="jumbotron-meta-info">
+            <h1>Internacionalização Com Grails</h1>
+            <span class="meta-info">
+                
+                
+                <span class="octicon octicon-calendar"></span> 2013/05/30
+                
+            </span>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+
+        $('.geopattern').each(function(){
+            $(this).geopattern($(this).data('pattern-id'));
+        });
+
+    });
+</script>
+<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="row">
+
+        
+        <div class="col-md-8 markdown-body">
+
+            <p>Apesar de muitos desenvolvedores, não tomar o cuidado de desenvolver suas aplicações com suporte a múltiplos idiomas,
+acredito ser bem relevante levar isto em consideração, afinal se estas aplicações ganharem proporções maiores e este
+requisito não foi analisado inicialmente, você terá uma enorme dor de cabeça para mudar isto.</p>
+
+<p>Outro fator importante, é a que com a internacionalização ajuda a resolver o problema de codificação de caracteres nos
+arquivos.</p>
+
+<p>Com certeza quem já desenvolveu aplicações web já deve ter passado pelo problema e aparecerem carácteres <code class="highlighter-rouge">coringas</code> no
+lugar de caracteres acentuados ou o carácter <code class="highlighter-rouge">ç</code>. Uma das soluções é utilizar a meta-tag:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"Content-Type"</span> <span class="na">content=</span><span class="s">"text/html; charset=ISO-8859-1"</span><span class="nt">&gt;</span></code></pre></figure>
+
+<p>Porém ao fazer isso teremos uma aplicação que irá funcionar apenas com caracteres latinos. Caso sua aplicação tenha que
+possuir um idioma como Japonês, por exemplo, este recurso não irá solucionar o problema.</p>
+
+<p>Um dica importante para resolver os problemas de codificação, é trabalhar com sistema operacional, banco de dados e
+arquivos com o mesmo charset, preferencialmente UTF-8.</p>
+
+<p>Com o <a href="https://grails.org/">Grails</a>, o uso de internacionalização, é praticamente intrínseco e para fazer uso deste recurso
+devemos entender como ele é organizado.</p>
+
+<p>O <a href="https://grails.org/">Grails</a>, possuí o diretório <code class="highlighter-rouge">grails-app/i18n</code>, onde o nome de cada arquivo contido no diretório deve
+iniciar por <code class="highlighter-rouge">messages_</code> e terminar com a localidade, conforme os exemplos abaixo:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">messages.properties
+messages_en.properties
+messages_fr.properties
+messages_pt_BR.properties</code></pre></figure>
+
+<p>Por padrão Grails olha para o arquivo messages.properties a menos que o usuário tenha especificado a localidade.
+É possível criar seu próprio pacote de mensagens, para isso, basta criar um novo arquivo de propriedades que termina
+com o localidade que você está interessado. Por exemplo <code class="highlighter-rouge">messages_pt_BR.properties</code> refere-se ao português brasileiro.</p>
+
+<h2 id="usando-as-mensagens">Usando as mensagens</h2>
+
+<p>O local mais comum para utilizar as mensagens é nos arquivos <code class="highlighter-rouge">.gsp</code> contidos no diretório <code class="highlighter-rouge">grails-app/view</code>, para isso
+é possível utilizar a seguinte tag:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;g:message</span> <span class="na">code=</span><span class="err"> </span><span class="s">"chave.da.mensagem"</span> <span class="nt">/&gt;</span></code></pre></figure>
+
+<p>Quando este recuso for utilizado o grails irá procurar no arquivo correspondente a localidade que o usuário está utilizando.
+Nele deve estar contido o conteúdo da mensagem conforme é demonstrado no exemplo abaixo:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">chave.da.mensagem <span class="o">=</span> Olá mundo</code></pre></figure>
+
+<p>É possível utilizar mensagem com argumentos, por exemplo:</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;g:message</span> <span class="na">code=</span><span class="s">"chave.da.mensagem.com.arg"</span> <span class="na">args=</span><span class="err"> </span><span class="s">"${['Leandro','Internacionalização']}"</span> <span class="nt">/&gt;</span></code></pre></figure>
+
+<p>A declaração mensagem especifica parâmetros posicionais que são dinamicamente especificados:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">chave.da.mensagem.com.arg <span class="o">=</span> Olá, <span class="o">{</span>0<span class="o">}</span>. Você está aprendendo <span class="o">{</span>1<span class="o">}</span> em Grails.</code></pre></figure>
+
+<p>Além disso podemos querer utilizar este recurso no classe de <code class="highlighter-rouge">controller</code>, para isso podemos utilizar este recurso da
+seguinte forma:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="kt">def</span> <span class="nf">show</span> <span class="o">()</span> <span class="o">{</span>
+  <span class="kt">def</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span><span class="o">(</span><span class="nl">code:</span> <span class="s2">"chave.da.mensagem.com.arg"</span><span class="o">,</span> <span class="nl">args:</span> <span class="o">[</span><span class="s1">'Leandro'</span><span class="o">,</span> <span class="s1">'Internacionalização'</span><span class="o">])</span>
+<span class="o">}</span></code></pre></figure>
+
+<h2 id="concluso">Conclusão</h2>
+
+<p>Utilizando estes cuidados ao iniciar uma aplicação, com certeza será evitado futuras dores de cabeça, além de tornar
+sua aplicação flexível a qualquer idioma.</p>
+
+
+
+            <!-- Comments -->
+            
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+         * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        /*
+         var disqus_config = function () {
+         this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+         this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+         };
+         */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+
+            s.src = '//http-leandrogehlen-github-io.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+        </div>
+
+        <div class="col-md-4">
+            <h3>Índice</h3>
+<div id="post-directory-module">
+<section class="post-directory">
+    <!-- Links that trigger the jumping -->
+    <!-- Added by javascript below -->
+    <dl></dl>
+</section>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $( "article h2" ).each(function( index ) {
+            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+                    $(this).attr("id")
+                    + ">"
+                    + $(this).text()
+                    + "</a></dt>");
+
+            var children = $(this).nextUntil("h2", "h3")
+
+            children.each(function( index ) {
+                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
+                        $(this).attr("id")
+                        + ">"
+                        + "&nbsp;&nbsp;- " + $(this).text()
+                        + "</a></dd>");
+            });
+        });
+
+        var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
+
+        $(window).scroll(function() {                  // assign scroll event listener
+
+            var currentScroll = $(window).scrollTop(); // get current position
+
+            if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+                $('#post-directory-module').css({      // scroll to that element or below it
+                    top: '100px',
+                    position: 'fixed',
+                    width: 'inherit'
+                });
+            } else {                                   // apply position: static
+                $('#post-directory-module').css({      // if you scroll above it
+                    position: 'inherit',
+                    width: 'inherit'
+                });
+            }
+
+        });
+
+        $("a.jumper").on("click", function( e ) {
+
+            e.preventDefault();
+
+            $("body, html").animate({
+                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
+            }, 600);
+
+        });
+    });
+
+</script>
+
+        </div>
+        
+
+    </div>
+
+</article>
+
+        </div>
+
+    <footer class="container">
+
+    <div class="site-footer">
+
+        <div class="copyright pull-left">
+            <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
+            Power by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
+        </div>
+
+        <a href="https://github.com/DONGChuan" target="_blank" aria-label="view source code">
+            <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+        </a>
+
+        <div class="pull-right">
+            <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+        </div>
+
+    </div>
+
+    <!-- Third-Party JS -->
+    <script type="text/javascript" src="/bower_components/geopattern/js/geopattern.min.js"></script>
+
+    <!-- My JS -->
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+
+    
+
+    
+    <!-- Google Analytics -->
+    <div style="display:none">
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'tracking_id', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+    </div>
+    
+
+</footer>
+
+
+    </body>
+
+</html>

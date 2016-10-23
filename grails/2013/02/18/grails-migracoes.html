@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
+
+    <title>Migrações do Banco de Dados com Grails</title>
+    <meta name="description"
+          content="Geralmente, vejo em tutoriais sobre Grails, demonstrarem primeiramente a geração de Scaffold, por ser umas dasfuncionalidades que chama muito atenção pela fa...">
+
+    <link rel="canonical" href="https://leandrogehlen.github.io/grails/2013/02/18/grails-migracoes.html">
+    <link rel="alternate" type="application/rss+xml" title="Leandro Guindani Gehlen" href="https://leandrogehlen.github.io/feed.xml">
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Third-Party CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/bower_components/hover/css/hover-min.css">
+    <link rel="stylesheet" href="/bower_components/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/assets/css/common.css">
+
+    <!-- CSS set in page -->
+    
+
+    <!-- CSS set in layout -->
+    
+    <link rel="stylesheet" href="/assets/css/sidebar-post-nav.css">
+    
+
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+    <div class="container">
+        <a id="site-header-brand" href="/" title="leandrogehlen">
+            <span class="octicon octicon-mark-github"></span> leandrogehlen
+        </a>
+        <nav class="site-header-nav" role="navigation">
+            
+            <a href="/"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Home">
+                Home
+            </a>
+            
+            <a href="/repos"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Repositórios">
+                Repositórios
+            </a>
+            
+            <a href="/blog"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Blog">
+                Blog
+            </a>
+            
+            <a href="/about"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Sobre">
+                Sobre
+            </a>
+            
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <section class="jumbotron geopattern" data-pattern-id="Migrações do Banco de Dados com Grails">
+    <div class="container">
+        <div id="jumbotron-meta-info">
+            <h1>Migrações do Banco de Dados com Grails</h1>
+            <span class="meta-info">
+                
+                
+                <span class="octicon octicon-calendar"></span> 2013/02/18
+                
+            </span>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+
+        $('.geopattern').each(function(){
+            $(this).geopattern($(this).data('pattern-id'));
+        });
+
+    });
+</script>
+<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="row">
+
+        
+        <div class="col-md-8 markdown-body">
+
+            <p>Geralmente, vejo em tutoriais sobre Grails, demonstrarem primeiramente a geração de <code class="highlighter-rouge">Scaffold</code>, por ser umas das
+funcionalidades que chama muito atenção pela facilidade e rapidez de se gerar um <code class="highlighter-rouge">CRUD</code>. Porém acredito que para
+começarmos a programar o primeiro passo seria as migrações da base de dados.</p>
+
+<p>Apesar do <a href="https://grails.org/">Grails</a> criar automaticamente o esquema do banco de dados através do <a href="http://hibernate.org/">Hibernate</a>,
+e isso contribuir para se iniciar rapidamente o desenvolvimento de uma aplicação Web, o que parece ser um facilitador
+pode se tornar em um grande transtorno quando esta aplicação se mover para a produção.</p>
+
+<p>Quando o <a href="http://hibernate.org/">Hibernate</a> realiza as operações no seu esquema de banco de dados, não leva em consideração se
+sua aplicação pode perder dados. Além da perca dos dados a aplicação poderá ficar com sua estrutura de banco de dados
+diferente das classes de domínio, dependendo do forma de atualização do esquema que escolhermos, o <a href="http://hibernate.org/">Hibernate</a>
+não removerá nada, apenas irá criar o que esta faltando.</p>
+
+<p>Tendo isto em vista o <a href="https://grails.org/">Grails</a> possuí o plugin <a href="http://grails.org/plugin/database-migration">Grails Database Migration Plugin</a>,
+com ele podemos criar um script de atualização deste esquema, o que nos proporciona a criação ou remoção de estruturas
+de forma segura, mantendo nosso esquema de base de dados sincronizado com as classes de domínio da aplicação.</p>
+
+<p>Para demonstrar a utilização deste plugin vamos criar uma aplicação nova. Para isso abra o terminal de seu computador
+e digite o seguinte comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grails create-app migracao</code></pre></figure>
+
+<p>Este comando irá criar toda a estrutura de sua aplicação e já estará instalado a versão 1.2.1 database-migration,
+aconselho atualizar este plugin para a versão 1.3.2 pois algumas correções foram realizadas e é importante que o plugin
+funcione correamente.</p>
+
+<p>Para isso altere o arquivo <code class="highlighter-rouge">BuildConfig.groovy</code> que está em <code class="highlighter-rouge">grails-app/conf</code> do seu projeto, substituindo a versão
+<code class="highlighter-rouge">1.2.1</code> para <code class="highlighter-rouge">1.3.2</code>. Com isso a sessão plugins deste arquivos deverá ficar da seguinte forma</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">plugins</span> <span class="o">{</span>
+  <span class="o">...</span>
+  <span class="n">runtime</span> <span class="s2">":database-migration:1.3.2"</span>    
+  <span class="o">...</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>após a alteração salve o arquivo e execute o seguinte comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grails dbm-generate-changelog changelog-1.0.groovy</code></pre></figure>
+
+<p>Este comando irá gerar o arquivo <code class="highlighter-rouge">changelog-1.0.groovy</code> dentro do diretório <code class="highlighter-rouge">grails-app/migration</code>. Além deste arquivo vamos
+criar outro arquivo dentro deste mesmo diretório denominado changelog.groovy. Este será um arquivo mestre, que irá
+informar ao plugin quais os scripts devem ser executados, isto por que a cada nova versão de sua aplicação será gerado
+um novo arquivo de script.</p>
+
+<p>Inicialemente arquivo <code class="highlighter-rouge">changelog.groovy</code> terá o seguinte conteúdo:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">databaseChangeLog</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">include</span> <span class="nl">file:</span> <span class="s2">"changelog-1.0.groovy"</span>   
+<span class="o">}</span></code></pre></figure>
+
+<p>O último passo é configurar como será executado estas migrações, para isso vamos alterar o arquivo <code class="highlighter-rouge">Config.groovy</code> que
+se encontra em <code class="highlighter-rouge">grails-app/conf</code>, adicionando as seguintes configurações:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">grails</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">databasemigration</span><span class="o">.</span><span class="na">updateOnStart</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">grails</span><span class="o">.</span><span class="na">plugin</span><span class="o">.</span><span class="na">databasemigration</span><span class="o">.</span><span class="na">updateOnStartFileNames</span> <span class="o">=</span> <span class="o">[</span><span class="s1">'changelog.groovy'</span><span class="o">]</span></code></pre></figure>
+
+<p>A primeira configuração informa ao plugin que as alterações do esquema serão executadas ao iniciar a aplicação.
+A segunda informa quais os arquivos de script devem ser executados</p>
+
+<p>Caso queira executar manualmente os scripts deve-se remover a primeira configuração e executar o seguinte comando</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">grails</span> <span class="n">dbm</span><span class="o">-</span><span class="n">update</span></code></pre></figure>
+
+<p>Antes de iniciar a aplicação vamos configurar o arquivo DataSource.groovy para que ele não utilize a atualização pelo
+<a href="http://hibernate.org/">Hibernate</a>, para isso vamos comentar a linha <code class="highlighter-rouge">dbCreate = “create-drop”</code> deixando o arquivo da
+seguinte forma:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="o">...</span>
+<span class="n">environments</span> <span class="o">{</span>
+    <span class="n">development</span> <span class="o">{</span>
+        <span class="n">dataSource</span> <span class="o">{</span>
+            <span class="c1">//dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="s2">"jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">...</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Vamor executar a aplicação através do comando:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grails run-app</code></pre></figure>
+
+<p>O plugin fornece uma ferramenta de documentação de suas migrações para ver essa documentação acesse
+<code class="highlighter-rouge">http://localhost:8080/aula1-migracao/dbdoc</code> pelo seu browser.</p>
+
+<p>Agora vamos incluir o atributo <code class="highlighter-rouge">sexo</code> na classe <code class="highlighter-rouge">Pessoa</code>, deixando ela no seguinte formato:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="kd">class</span> <span class="nc">Pessoa</span> <span class="o">{</span>
+  <span class="n">String</span> <span class="n">nome</span>
+  <span class="n">String</span> <span class="n">sobreNome</span>
+  <span class="n">Date</span> <span class="n">dataNasc</span>
+  <span class="n">String</span> <span class="n">sexo</span>
+
+  <span class="kd">static</span> <span class="n">belongsTo</span> <span class="o">=</span> <span class="o">[</span><span class="nl">cidade:</span> <span class="n">Cidade</span><span class="o">]</span>
+
+  <span class="kd">static</span> <span class="n">constraints</span> <span class="o">=</span> <span class="o">{</span>
+      <span class="n">nome</span> <span class="nl">blank:</span> <span class="kc">false</span>
+      <span class="n">sobreNome</span> <span class="nl">blank:</span> <span class="kc">false</span>
+      <span class="n">dataNasc</span> <span class="nl">blank:</span> <span class="kc">false</span>
+      <span class="n">sexo</span> <span class="nl">inList:</span> <span class="o">[</span><span class="s2">"M"</span><span class="o">,</span> <span class="s2">"F"</span><span class="o">]</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Neste momento vamos alterar manualmente o arquivo changelog-1.0.groovy para adicionar uma coluna na tabela pessoa
+adicionando o seguinte conteúdo ao arquivo:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">changeSet</span><span class="o">(</span><span class="nl">author:</span> <span class="s2">"leandro (generated)"</span><span class="o">,</span> <span class="nl">id:</span> <span class="s2">"1364128026256-4"</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">comment</span> <span class="o">{</span> <span class="s1">'Adicionado coluna sexo'</span> <span class="o">}</span>
+  <span class="n">addColumn</span><span class="o">(</span><span class="nl">tableName:</span> <span class="s2">"pessoa"</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">column</span><span class="o">(</span><span class="nl">name:</span> <span class="s2">"sexo"</span><span class="o">,</span> <span class="nl">type:</span> <span class="s2">"varchar(1)"</span><span class="o">)</span> <span class="o">{</span>
+          <span class="n">constraints</span><span class="o">(</span><span class="nl">nullable:</span> <span class="s2">"false"</span><span class="o">)</span>
+      <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>A geração do script pelo comando dbm-generate-changelog pode ser utilizada até o momento em que a versão da aplicação
+não está em produção, pois este comando não compara o que tem no script atual para gerar as diferenças, ele simplesmente
+gera um novo script criando toda a estrutura a partir das classes de domínio.</p>
+
+<p>Eu particularmente não utilizo a geração, acho mais confiável ir criando os scripts.</p>
+
+
+
+            <!-- Comments -->
+            
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+         * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        /*
+         var disqus_config = function () {
+         this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+         this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+         };
+         */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+
+            s.src = '//http-leandrogehlen-github-io.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+        </div>
+
+        <div class="col-md-4">
+            <h3>Índice</h3>
+<div id="post-directory-module">
+<section class="post-directory">
+    <!-- Links that trigger the jumping -->
+    <!-- Added by javascript below -->
+    <dl></dl>
+</section>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $( "article h2" ).each(function( index ) {
+            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+                    $(this).attr("id")
+                    + ">"
+                    + $(this).text()
+                    + "</a></dt>");
+
+            var children = $(this).nextUntil("h2", "h3")
+
+            children.each(function( index ) {
+                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
+                        $(this).attr("id")
+                        + ">"
+                        + "&nbsp;&nbsp;- " + $(this).text()
+                        + "</a></dd>");
+            });
+        });
+
+        var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
+
+        $(window).scroll(function() {                  // assign scroll event listener
+
+            var currentScroll = $(window).scrollTop(); // get current position
+
+            if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+                $('#post-directory-module').css({      // scroll to that element or below it
+                    top: '100px',
+                    position: 'fixed',
+                    width: 'inherit'
+                });
+            } else {                                   // apply position: static
+                $('#post-directory-module').css({      // if you scroll above it
+                    position: 'inherit',
+                    width: 'inherit'
+                });
+            }
+
+        });
+
+        $("a.jumper").on("click", function( e ) {
+
+            e.preventDefault();
+
+            $("body, html").animate({
+                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
+            }, 600);
+
+        });
+    });
+
+</script>
+
+        </div>
+        
+
+    </div>
+
+</article>
+
+        </div>
+
+    <footer class="container">
+
+    <div class="site-footer">
+
+        <div class="copyright pull-left">
+            <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
+            Power by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
+        </div>
+
+        <a href="https://github.com/DONGChuan" target="_blank" aria-label="view source code">
+            <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+        </a>
+
+        <div class="pull-right">
+            <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+        </div>
+
+    </div>
+
+    <!-- Third-Party JS -->
+    <script type="text/javascript" src="/bower_components/geopattern/js/geopattern.min.js"></script>
+
+    <!-- My JS -->
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+
+    
+
+    
+    <!-- Google Analytics -->
+    <div style="display:none">
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'tracking_id', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+    </div>
+    
+
+</footer>
+
+
+    </body>
+
+</html>

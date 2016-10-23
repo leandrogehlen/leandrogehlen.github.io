@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Favicon Icon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
+
+    <title>Segurança Com SpringSecurity</title>
+    <meta name="description"
+          content="Quando desenvolvemos aplicações web, é quase impossível não nos preocuparmos com segurança, autenticação do usuário,e restrições de acesso.">
+
+    <link rel="canonical" href="https://leandrogehlen.github.io/grails/2013/08/05/grails-springsecurity.html">
+    <link rel="alternate" type="application/rss+xml" title="Leandro Guindani Gehlen" href="https://leandrogehlen.github.io/feed.xml">
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Third-Party CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/bower_components/hover/css/hover-min.css">
+    <link rel="stylesheet" href="/bower_components/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+
+    <!-- My CSS -->
+    <link rel="stylesheet" href="/assets/css/common.css">
+
+    <!-- CSS set in page -->
+    
+
+    <!-- CSS set in layout -->
+    
+    <link rel="stylesheet" href="/assets/css/sidebar-post-nav.css">
+    
+
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+    <div class="container">
+        <a id="site-header-brand" href="/" title="leandrogehlen">
+            <span class="octicon octicon-mark-github"></span> leandrogehlen
+        </a>
+        <nav class="site-header-nav" role="navigation">
+            
+            <a href="/"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Home">
+                Home
+            </a>
+            
+            <a href="/repos"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Repositórios">
+                Repositórios
+            </a>
+            
+            <a href="/blog"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Blog">
+                Blog
+            </a>
+            
+            <a href="/about"
+               class=" site-header-nav-item hvr-underline-from-center"
+               target=""
+               title="Sobre">
+                Sobre
+            </a>
+            
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <section class="jumbotron geopattern" data-pattern-id="Segurança Com SpringSecurity">
+    <div class="container">
+        <div id="jumbotron-meta-info">
+            <h1>Segurança Com SpringSecurity</h1>
+            <span class="meta-info">
+                
+                
+                <span class="octicon octicon-calendar"></span> 2013/08/05
+                
+            </span>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function(){
+
+        $('.geopattern').each(function(){
+            $(this).geopattern($(this).data('pattern-id'));
+        });
+
+    });
+</script>
+<article class="post container" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <div class="row">
+
+        
+        <div class="col-md-8 markdown-body">
+
+            <p>Quando desenvolvemos aplicações web, é quase impossível não nos preocuparmos com segurança, autenticação do usuário,
+e restrições de acesso.</p>
+
+<p>Desenvolvendo uma aplicação simples, em que o nível de controle se restringe a controlar seu o usuário está autenticado ou não,
+o <a href="https://grails.org/">Grails</a> nos permite utilizar a variável session e em conjunto com os filters resolver esta questão
+(este <a href="http://www.itexto.net/devkico/?p=29">link</a> demonstra como implementar esta situação).</p>
+
+<p>Porém quando nos deparamos, com sistemas maiores, onde necessitamos de um controle mais rigoroso, a implementação acima
+citada pode não ser suficiente, e apresentar falhas o que pode causar um enorme transtorno para o desenvolvedor.</p>
+
+<p>Uma opção existente para a segurança de sistemas mais complexos, é o plugin <a href="http://grails.org/plugin/spring-security-core">SpringSecurity</a>, com ele
+é possível criar uma aplicação segura em poucos minutos, facilitando e muito a vida do desenvolvedor.</p>
+
+<p>Este plugin tem muitos recursos, neste post vamos implementar um simples controle de autenticação.</p>
+
+<p>Para isso vamos criar a aplicacao de exemplo:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grails create-app autenticacao</code></pre></figure>
+
+<p>Agora vamos adicionar a dependencia do plugin na sessão plugins do arquivo <code class="highlighter-rouge">grails-app/conf/BuildConfig.groovy</code> da
+seguinte forma:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">plugins</span> <span class="o">{</span>
+  <span class="o">...</span>
+
+  <span class="n">compile</span> <span class="s2">":spring-security-core:1.2.7.3"</span>
+
+  <span class="o">...</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Agora vamos executar o comando abaixo para que o grails efetue o download do plugin e o instale corretamente na aplicação:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grails refresh-dependencies</code></pre></figure>
+
+<p>O plugin possuí um script para facilitar a sua configuração, e este deve ser executado da seguinte forma:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">grails s2-quickstart br.com.teste Usuario Role</code></pre></figure>
+
+<p>Conforme é possível observar para executar o script é necessário passar 3 parâmetros. O primeiro diz respeito ao pacote
+onde serão gerada as duas classes de domínios necessárias, onde a primeira representa o usuário da apliação e a
+segunda é os papéis(roles) que o usuário pode assumir.</p>
+
+<p>Este script também vai alterar o arquivo <code class="highlighter-rouge">grails-app/conf/Config.groovy</code> adicionando as seguintes linhas:</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="n">plugins</span> <span class="o">{</span>
+    <span class="c1">// Added by the Spring Security Core plugin:</span>
+    <span class="n">grails</span><span class="o">.</span><span class="na">plugins</span><span class="o">.</span><span class="na">springsecurity</span><span class="o">.</span><span class="na">userLookup</span><span class="o">.</span><span class="na">userDomainClassName</span> <span class="o">=</span> <span class="s1">'br.com.teste.Usuario'</span>
+    <span class="n">grails</span><span class="o">.</span><span class="na">plugins</span><span class="o">.</span><span class="na">springsecurity</span><span class="o">.</span><span class="na">userLookup</span><span class="o">.</span><span class="na">authorityJoinClassName</span> <span class="o">=</span> <span class="s1">'br.com.teste.UsuarioRole'</span>
+    <span class="n">grails</span><span class="o">.</span><span class="na">plugins</span><span class="o">.</span><span class="na">springsecurity</span><span class="o">.</span><span class="na">authority</span><span class="o">.</span><span class="na">className</span> <span class="o">=</span> <span class="s1">'br.com.teste.Role'</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>O plugin também irá criar as views e os controllers para que o usuário efetue o login no aplição.</p>
+
+<p>Agora vamos editar o arquivo <code class="highlighter-rouge">grails-app/conf/BootStrap.groovy</code> para que ao iniciar a aplição seja inserido o usuario
+teste e adcionando a role <code class="highlighter-rouge">ROLE_ADMIN</code> a este usuário.</p>
+
+<figure class="highlight"><pre><code class="language-groovy" data-lang="groovy"><span class="kn">import</span> <span class="nn">br.com.teste.Role</span>
+<span class="kn">import</span> <span class="nn">br.com.teste.Usuario</span>
+<span class="kn">import</span> <span class="nn">br.com.teste.UsuarioRole</span>
+
+<span class="kd">class</span> <span class="nc">BootStrap</span> <span class="o">{</span>
+
+  <span class="kt">def</span> <span class="n">init</span> <span class="o">=</span> <span class="o">{</span> <span class="n">servletContext</span> <span class="o">-&gt;</span>
+      <span class="kt">def</span> <span class="n">role</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Role</span><span class="o">(</span><span class="nl">authority:</span>  <span class="s2">"ROLE_ADMIN"</span><span class="o">)</span>
+      <span class="n">role</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">)</span>
+
+      <span class="kt">def</span> <span class="n">usuario</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Usuario</span><span class="o">(</span><span class="nl">username:</span> <span class="s2">"teste"</span><span class="o">,</span> <span class="nl">password:</span> <span class="s2">"teste"</span><span class="o">,</span> <span class="nl">accountExpired:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">accountLocked:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">passwordExpired:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">enabled:</span> <span class="kc">true</span><span class="o">)</span>
+      <span class="n">usuario</span><span class="o">.</span><span class="na">save</span><span class="o">(</span><span class="nl">flush:</span> <span class="kc">true</span><span class="o">)</span>
+
+      <span class="n">UsuarioRole</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">usuario</span><span class="o">,</span> <span class="n">role</span><span class="o">)</span>
+    <span class="o">}</span>
+
+    <span class="kt">def</span> <span class="n">destroy</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>Agora é só executar o comando <code class="highlighter-rouge">grails run-app</code> a aplicação e testar a autenticação do usuário.</p>
+
+
+
+            <!-- Comments -->
+            
+<div class="comments">
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+         * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+         */
+        /*
+         var disqus_config = function () {
+         this.page.url = PAGE_URL; // Replace PAGE_URL with your page's canonical URL variable
+         this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+         };
+         */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+
+            s.src = '//http-leandrogehlen-github-io.disqus.com/embed.js';
+
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+        </div>
+
+        <div class="col-md-4">
+            <h3>Índice</h3>
+<div id="post-directory-module">
+<section class="post-directory">
+    <!-- Links that trigger the jumping -->
+    <!-- Added by javascript below -->
+    <dl></dl>
+</section>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $( "article h2" ).each(function( index ) {
+            $(".post-directory dl").append("<dt><a class=\"jumper\" hre=#" +
+                    $(this).attr("id")
+                    + ">"
+                    + $(this).text()
+                    + "</a></dt>");
+
+            var children = $(this).nextUntil("h2", "h3")
+
+            children.each(function( index ) {
+                $(".post-directory dl").append("<dd><a class=\"jumper\" hre=#" +
+                        $(this).attr("id")
+                        + ">"
+                        + "&nbsp;&nbsp;- " + $(this).text()
+                        + "</a></dd>");
+            });
+        });
+
+        var fixmeTop = $('#post-directory-module').offset().top - 100;       // get initial position of the element
+
+        $(window).scroll(function() {                  // assign scroll event listener
+
+            var currentScroll = $(window).scrollTop(); // get current position
+
+            if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+                $('#post-directory-module').css({      // scroll to that element or below it
+                    top: '100px',
+                    position: 'fixed',
+                    width: 'inherit'
+                });
+            } else {                                   // apply position: static
+                $('#post-directory-module').css({      // if you scroll above it
+                    position: 'inherit',
+                    width: 'inherit'
+                });
+            }
+
+        });
+
+        $("a.jumper").on("click", function( e ) {
+
+            e.preventDefault();
+
+            $("body, html").animate({
+                scrollTop: ($( $(this).attr('hre') ).offset().top - 100)
+            }, 600);
+
+        });
+    });
+
+</script>
+
+        </div>
+        
+
+    </div>
+
+</article>
+
+        </div>
+
+    <footer class="container">
+
+    <div class="site-footer">
+
+        <div class="copyright pull-left">
+            <!-- Please keep this line to let others know where this theme comes from. Thank you :D -->
+            Power by <a href="https://github.com/DONGChuan/Yummy-Jekyll">Yummy Jekyll</a>
+        </div>
+
+        <a href="https://github.com/DONGChuan" target="_blank" aria-label="view source code">
+            <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+        </a>
+
+        <div class="pull-right">
+            <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+        </div>
+
+    </div>
+
+    <!-- Third-Party JS -->
+    <script type="text/javascript" src="/bower_components/geopattern/js/geopattern.min.js"></script>
+
+    <!-- My JS -->
+    <script type="text/javascript" src="/assets/js/script.js"></script>
+
+    
+
+    
+    <!-- Google Analytics -->
+    <div style="display:none">
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'tracking_id', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+    </div>
+    
+
+</footer>
+
+
+    </body>
+
+</html>
