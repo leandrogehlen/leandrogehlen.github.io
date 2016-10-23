@@ -1,0 +1,23 @@
+---
+layout: post
+title:  "Recomeço"
+date:   2016-10-21 10:53:36 -0200
+categories: Notícias
+---
+
+Então depois de algum tempo (3 anos), resolvi reiniciar as atividades do meu blog.
+
+Durante este tempo, tive novas experiências na área de desenvolvimento de software, novas tecnologias, novos conceitos, novos problemas e em diversas linguagens.
+
+Prometo não parar de postar minhas experiências, para que com isso, possa auxiliar os desenvolvedores que concerteza vão passar ou estão passsando por problemas similares,
+quem sabe isto ajude a resolver suas dificuldades de forma mais rápida e eficiente.
+
+Nos posts, anteriores eu tinha optado por começar desenvolver aplicações `Web` utilizando
+[Grails][grails-site]. O framework realmente era excelente, mas problema foi a encontrar profissional.
+Diante disso, fui obrigado a trocar de tecnologia.
+
+Atualmente estou desenvolvendo um projeto com [Laravel][laravel-site], e estou tendo um excelente resultado.
+Estou tendo bastante cuidado em deixar a parte de `frontend` totalmente separada do `backend` para facilitar possíveis, futuras migrações de tecnologia.
+
+[grails-site]:https://grails.org/
+[laravel-site]:https://laravel.com/
